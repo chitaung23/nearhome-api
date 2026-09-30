@@ -1,0 +1,65 @@
+openapi: 3.1.0
+info:
+  title: Property Portal API
+  version: 0.1.0
+  description: Phase 1 public browse contract. Authenticated listing management will extend this contract.
+servers:
+  - url: http://localhost:4000/v1
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        '200': { description: Service is healthy }
+  /locations:
+    get:
+      operationId: listLocations
+      responses:
+        '200': { description: Supported locations and townships }
+  /listings:
+    get:
+      operationId: searchListings
+      parameters:
+        - { in: query, name: purpose, schema: { type: string, enum: [sale, rent] } }
+        - { in: query, name: location, schema: { type: string, enum: [yangon, mandalay, bago] } }
+        - { in: query, name: township, schema: { type: string } }
+        - { in: query, name: propertyType, schema: { type: string, enum: [apartment, condo, house, land, commercial] } }
+        - { in: query, name: minPrice, schema: { type: integer, minimum: 0 } }
+        - { in: query, name: maxPrice, schema: { type: integer, minimum: 1 } }
+        - { in: query, name: minBedrooms, schema: { type: integer, minimum: 0 } }
+        - { in: query, name: q, schema: { type: string, maxLength: 100 } }
+        - { in: query, name: sort, schema: { type: string, enum: [newest, price_asc, price_desc], default: newest } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 48, default: 12 } }
+      responses:
+        '200': { description: Published listings only }
+        '400': { $ref: '#/components/responses/ValidationError' }
+  /listings/{id}:
+    get:
+      operationId: getPublishedListing
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Published listing detail }
+        '404': { description: Listing missing or not public }
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: {}
+  responses:
+    ValidationError:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

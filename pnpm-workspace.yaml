@@ -1,0 +1,4 @@
+packageImportMethod: copy
+confirmModulesPurge: false
+allowBuilds:
+  esbuild: true
