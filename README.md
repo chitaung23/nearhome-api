@@ -1,6 +1,6 @@
 # Property Portal API
 
-Versioned HTTP API for the Myanmar Property Portal. The first implementation slice provides locations, public listing search, published listing detail, SQLite migrations, deterministic demo data, and an OpenAPI contract.
+The service behind the Myanmar Property Portal. It supports public property discovery, account sessions, owner listing management, moderation, deterministic demo data, and a versioned API contract.
 
 ## Run locally
 
@@ -14,6 +14,8 @@ pnpm dev
 
 The API listens on `http://localhost:4000`; health is available at `/v1/health`.
 
+Set `WEB_ORIGIN` in `.env` to the web application's origin. The API stores local development data at the configured database path.
+
 ## Commands
 
 - `pnpm dev` — development server with reload
@@ -22,6 +24,8 @@ The API listens on `http://localhost:4000`; health is available at `/v1/health`.
 - `pnpm db:seed` — migrate and deterministically seed the configured database
 
 Demo records are visibly marked and are disabled when `ENABLE_DEMO_SEED` is not `true`.
+
+The OpenAPI description is available at `openapi/openapi.yaml`.
 
 Development demo accounts:
 
